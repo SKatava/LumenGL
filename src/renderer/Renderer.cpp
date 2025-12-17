@@ -20,7 +20,7 @@ Renderer::Renderer() : m_program() {
     obj.material = new Material;
     obj.mesh->Init_vertices(vertices, GL_STATIC_DRAW);
     obj.material->Set_program(&m_program);
-    obj.material->Set_color({1.f, 0.f, 1.f});
+    obj.material->Set_color({0.5f, 0.5f, 0.5f});
     obj.draw_type = GL_TRIANGLES;
 }
 
