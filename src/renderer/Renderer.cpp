@@ -6,7 +6,7 @@ Renderer::Renderer() : m_program() {
     std::vector<Shader_type> types = {Shader_type::VERTEX, Shader_type::FRAGMENT};
     m_program = Shader_program(files, types);
 
-    Vertex v1, v2, v3, v4, v5, v6;
+    Vertex v1, v2, v3, v4, v5, v6, v7, v8, v9;
     v1.position = {-0.5f, -0.5f, 1.f};
     v2.position = {0.5f, -0.5f, 1.f};
     v3.position = {-0.5f, 0.5f, 1.f};
@@ -15,12 +15,16 @@ Renderer::Renderer() : m_program() {
     v5.position = {0.5f, -0.5f, 1.f};
     v6.position = {0.5f, 0.5f, 1.f};
 
-    std::vector<Vertex> vertices = {v1, v2, v3, v4, v5, v6};
+    v7.position = {-0.5f, 0.5f, 1.f};
+    v8.position = {0.5f, 0.5f, 1.f};
+    v9.position = {0.f, 1.f, 1.f};
+
+    std::vector<Vertex> vertices = {v1, v2, v3, v4, v5, v6, v7, v8, v9};
     obj.mesh = new Mesh();
     obj.material = new Material;
     obj.mesh->Init_vertices(vertices, GL_STATIC_DRAW);
     obj.material->Set_program(&m_program);
-    obj.material->Set_color({0.5f, 0.5f, 0.5f});
+    obj.material->Set_color({0.2f, 0.5f, 0.8f});
     obj.draw_type = GL_TRIANGLES;
 }
 

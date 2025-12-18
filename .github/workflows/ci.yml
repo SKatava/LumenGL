@@ -1,4 +1,4 @@
-name: C++ Build
+name: C++ OpenGL Build
 
 on:
   push:
@@ -12,8 +12,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Install build tools
-      run: sudo apt update && sudo apt install -y cmake g++
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y \
+          cmake \
+          g++ \
+          libgl1-mesa-dev \
+          libglfw3-dev \
+          libglm-dev
 
     - name: Configure
       run: cmake -S . -B build

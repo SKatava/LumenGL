@@ -22,6 +22,7 @@ void Mesh::Update_vertices(const std::vector<Vertex>& vertices) {
     m_VBO.Update_data(vertices, vertices.size(), 0);
 }
 
+//Bind mesh for use
 void Mesh::Bind() const {
     m_VAO.Bind();
 }
