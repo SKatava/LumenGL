@@ -3,6 +3,7 @@
 
 #include <glad/glad.h>
 #include <glm/vec3.hpp>
+#include <vector>
 #include <cstddef>
 
 struct Vertex {
