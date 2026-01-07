@@ -6,6 +6,7 @@
 
 #include <renderer/Render_object.h>
 #include <renderer/Shader_program.h>
+#include <renderer/Camera.h>
 
 class Renderer {
     public:
@@ -16,6 +17,7 @@ class Renderer {
     private:
         Shader_program m_program;
         Render_object obj;
+        Camera cam;
 };
 
 #endif

@@ -18,6 +18,11 @@ void Mesh::Init_vertices(const std::vector<Vertex>& vertices, GLenum draw_usage)
     m_VBO.Init_data(vertices, draw_usage);
 }
 
+//Set the indices(order in which vertices are used)
+void Mesh::Init_indices(GLuint* indices, size_t size ,GLenum draw_usage) {
+     m_EBO.Set_indices(indices, size, draw_usage);
+}
+
 //Updates all vertices(unless it is given less than it originaly has)
 void Mesh::Update_vertices(const std::vector<Vertex>& vertices) {
     m_VBO.Update_data(vertices, vertices.size(), 0);

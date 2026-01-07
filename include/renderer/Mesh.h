@@ -13,6 +13,7 @@ class Mesh {
     public:
         Mesh();
         void Init_vertices(const std::vector<Vertex>& vertices, GLenum draw_usage);
+        void Init_indices(GLuint* indices, size_t size, GLenum draw_usage);
         void Update_vertices(const std::vector<Vertex>& vertices);
         void Bind() const;
         const unsigned& Get_vertices_count();
@@ -20,6 +21,7 @@ class Mesh {
     private:
         VAO m_VAO;
         VBO m_VBO;
+        EBO m_EBO;
         unsigned m_vertex_count = 0;
 };
 

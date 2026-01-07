@@ -15,6 +15,7 @@ target_include_directories(stb PUBLIC external/stb/include)
 add_library(renderer STATIC
     src/renderer/VAO.cpp
     src/renderer/VBO.cpp
+    src/renderer/EBO.cpp
     src/renderer/Shader_program.cpp
     src/renderer/Shader.cpp
     src/renderer/Logger.cpp
