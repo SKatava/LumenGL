@@ -23,6 +23,7 @@ class Transform {
         Transform();
         void Rotate(float degrees, glm::vec3 direction);
         void Scale(float factor);
+        void Translate(glm::vec3 shift);
         void Apply(Shader_program& program, const char* uniform);
     private:
         glm::mat4 m_model = glm::mat4(1.0f);
