@@ -1,7 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <renderer/Renderer.h>
+#include <LumenGL/lumen_gl.h>
 
 int main() {
     if (!glfwInit()) {
@@ -27,17 +27,39 @@ int main() {
     glfwSwapInterval(0);
     glfwMakeContextCurrent(window);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-    }
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {}
 
-    Renderer renderer;
+    lumen::gl::Renderer renderer;
     renderer.Init();
+
+    lumen::gl::Scene scene("TEST_SCENE");
+    scene.AddObject( lumen::gl::RenderObjectBuilder::Create("PYRAMID")
+            .WithVertices({
+                {{-0.5f, 0.0f,  0.5f}, {0.0f, 0.0f}},
+                {{-0.5f, 0.0f, -0.5f}, {5.0f, 0.0f}},
+                {{ 0.5f, 0.0f, -0.5f}, {5.0f, 5.0f}},
+                {{ 0.5f, 0.0f,  0.5f}, {0.0f, 5.0f}},
+                {{ 0.0f, 0.8f,  0.0f}, {2.5f, 5.0f}},
+                })
+            .WithIndices({
+                0,1,2,  0,2,3,     // base
+                0,1,4,  1,2,4,
+                2,3,4,  3,0,4     // sides
+                })
+            .WithProgram(scene.GetOrLoadProgram("...", "...", "DEFAULT_PROGRAM"))
+            .WithTexture(scene.GetOrLoadTexture("../assets/textures/white-granite.png"))
+            .Build()
+    );
+        
+    renderer.SetActiveScene(&scene);
 
 
     while (!glfwWindowShouldClose(window)) {
-        renderer.Render();
         glfwSwapBuffers(window);
         glfwPollEvents();
+        renderer.BeginFrame();
+        renderer.Render();
+        //renderer.EndFrame();main
     }
 
     glfwTerminate();
