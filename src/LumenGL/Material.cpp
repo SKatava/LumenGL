@@ -2,9 +2,7 @@
 
 Material::Material()
     : m_program(nullptr), m_texture(nullptr) 
-{
-    // might want a default/fallback shader here
-}
+{}
 
 Material::Material(std::shared_ptr<ShaderProgram> program)
     : m_program(std::move(program))
@@ -18,13 +16,12 @@ void Material::Bind() const {
     if (!m_program) return;
 
     m_program->Activate();
+    m_texture->Bind();
+}
 
+void Material::SetUniforms() const {
     m_program->SetVec3("u_color", m_color);
-
-    if (m_texture) {
-        m_texture->Bind();
-        m_texture->TextureUnit(m_program, "tex0", 0);
-    }
+    m_texture->TextureUnit(m_program, "tex0", 0);
 }
 
 void Material::Unbind() const {

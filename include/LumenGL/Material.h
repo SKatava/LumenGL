@@ -44,12 +44,13 @@ class Material {
         //Core interface---------------------------------
 
         void Bind() const;
+        void SetUniforms() const;
         void Unbind() const;
         void Delete() const;
 
     private:
-        std::shared_ptr<ShaderProgram> m_program;
-        std::shared_ptr<Texture> m_texture;
+        std::shared_ptr<ShaderProgram> m_program {nullptr};
+        std::shared_ptr<Texture> m_texture {nullptr};
         glm::vec3 m_color;
 };
 

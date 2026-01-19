@@ -1,72 +1,79 @@
 #include <LumenGL/Scene.h>
 
-//Scene constructor - sets default camera and shader programs
-lumen::gl::Scene::Scene(const std::string& name) : m_name(name) {
-    m_camera = std::make_shared<Camera>(800, 800, glm::vec3(0.0f, 0.0f, 5.0f));
-    GetOrLoadProgram("../shaders/default.vert", "../shaders/default.frag", "DEFAULT_PROGRAM");
-    GetOrLoadTexture("../assets/textures/white-granite.png");
-}
+#include <iostream>
 
-//Scene destructor
-lumen::gl::Scene::~Scene() {}
+namespace lumen::gl {
 
-//Add the object the scene
-void lumen::gl::Scene::AddObject(std::shared_ptr<RenderObject> object) {
-    m_objects.push_back(object); 
-}
-
-//Render all objects in the scene - sorted by material for fewer draw calls
-void lumen::gl::Scene::RenderScene() {
-
-    std::vector<const RenderObject*> sorted;
-    sorted.reserve(m_objects.size());
-
-    for (const auto& obj : m_objects) {
-        sorted.push_back(obj.get());
+    //Scene constructor - sets default camera and shader programs
+    Scene::Scene(const std::string& name) : m_name(name) {
+        m_camera = std::make_shared<Camera>(800, 800, glm::vec3(0.0f, 0.0f, 2.0f));
+        GetOrLoadProgram("../shaders/default.vert", "../shaders/default.frag", "DEFAULT_PROGRAM");
+        GetOrLoadTexture("../assets/textures/white-granite.png");
     }
 
-    std::ranges::sort(sorted, {}, &RenderObject::material);
-    
-    Material* currentMaterial = nullptr;
+    //Scene destructor
+    Scene::~Scene() {}
 
-    for (const auto* obj : sorted) {
-        if (obj->material.get() != currentMaterial) {
-            currentMaterial = obj->material.get();
-            currentMaterial->Bind();
+    //Add the object the scene
+    void Scene::AddObject(std::shared_ptr<RenderObject> object) {
+        m_objects.push_back(object); 
+    }
 
-            m_camera->Matrix(45.0f, 0.1f, 100.0f, currentMaterial->GetProgram(), "camMatrix");
+    //Render all objects in the scene - sorted by shader program
+    void Scene::RenderScene() {
+        //Testing transforms
+        m_objects.back()->transform.Rotate(0.5, {0.f, 1.f, 0.f});
+        m_objects.back()->transform.Scale(0.999f);
 
+        std::vector<const RenderObject*> sorted;
+        sorted.reserve(m_objects.size());
+
+        for (const auto& obj : m_objects) {
+            sorted.push_back(obj.get());
         }
 
-        obj->mesh->Bind();
-        
-        obj->transform.Apply(currentMaterial->GetProgram(), "modelMatrix");
+        std::ranges::sort(sorted, {}, [](const RenderObject* obj) {return obj->material->GetProgram(); } );
 
-        glDrawElements(obj->drawMode, obj->mesh->GetIndicesCount(), GL_UNSIGNED_INT, 0);
-    }
-}
+        Material* currentMaterial = nullptr;
 
-//Loads the shader to the cache and returns it
-std::shared_ptr<ShaderProgram> lumen::gl::Scene::GetOrLoadProgram(const std::string& vertPath, const std::string& fragPath, const std::string& name) {
-    auto it = m_programCache.find(name);
+        for (const auto* obj : sorted) {
+            if (!currentMaterial || obj->material->GetProgram().get() != currentMaterial->GetProgram().get()) {
+                currentMaterial = obj->material.get();
+                currentMaterial->Bind();
+                m_camera->Matrix(45.0f, 0.1f, 100.0f, currentMaterial->GetProgram(), "camMatrix");
+            }
 
-    if(it != m_programCache.end()) {
-        return it->second;
-    }
+            obj->material->SetUniforms();
+            obj->mesh->Bind();
+            obj->transform.Apply(currentMaterial->GetProgram(), "modelMatrix");
 
-    std::vector<std::string> files = {vertPath, fragPath};
-    std::vector<ShaderType> types = {ShaderType::VERTEX, ShaderType::FRAGMENT};
-    m_programCache[name] = std::make_shared<ShaderProgram>(files, types);    
-    return m_programCache[name];
-}
-
-std::shared_ptr<Texture> lumen::gl::Scene::GetOrLoadTexture(const std::string& texturePath) {
-    auto it = m_textureCache.find(texturePath);
-    
-    if (it != m_textureCache.end()) {
-        return it->second;
+            glDrawElements(obj->drawMode, obj->mesh->GetIndicesCount(), GL_UNSIGNED_INT, 0);
+        }
     }
 
-    m_textureCache[texturePath] = std::make_shared<Texture>(texturePath.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
-    return m_textureCache[texturePath];
+    //Loads the shader to the cache and returns it
+    std::shared_ptr<ShaderProgram> Scene::GetOrLoadProgram(const std::string& vertPath, const std::string& fragPath, const std::string& name) {
+        auto it = m_programCache.find(name);
+
+        if(it != m_programCache.end()) {
+            return it->second;
+        }
+
+        std::vector<std::string> files = {vertPath, fragPath};
+        std::vector<ShaderType> types = {ShaderType::VERTEX, ShaderType::FRAGMENT};
+        m_programCache[name] = std::make_shared<ShaderProgram>(files, types);    
+        return m_programCache[name];
+    }
+
+    std::shared_ptr<Texture> Scene::GetOrLoadTexture(const std::string& texturePath) {
+        auto it = m_textureCache.find(texturePath);
+
+        if (it != m_textureCache.end()) {
+            return it->second;
+        }
+
+        m_textureCache[texturePath] = std::make_shared<Texture>(texturePath.c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
+        return m_textureCache[texturePath];
+    }
+
 }
