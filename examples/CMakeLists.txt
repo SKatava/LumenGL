@@ -7,7 +7,7 @@ find_package(glfw3 REQUIRED)
 
 target_link_libraries(renderer_example
     PRIVATE
-        renderer
+        LumenGL
         glfw
 )
 
