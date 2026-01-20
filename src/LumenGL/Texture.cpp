@@ -1,6 +1,37 @@
 #include <LumenGL/Texture.h>
 
-Texture::Texture() {}
+//Contructor - create a default texture
+Texture::Texture() {
+    const int SIZE = 8;
+    glm::uint32 pixels[SIZE*SIZE];
+    glm::uint32 colorA = 0xFFFFFFFF;
+    glm::uint32 colorB = 0xFF404040;
+
+    for(int y{}; y < SIZE; ++y) {
+        for(int x{}; x < SIZE; ++x) {
+            bool even = ( (x + y) % 2 ) == 0;
+            pixels[y * SIZE + x] = even ? colorA : colorB;
+        }
+    }
+
+    glGenTextures(1, &m_ID);
+
+    glActiveTexture(GL_TEXTURE0);
+
+    glBindTexture(m_type, m_ID);
+
+    glTextureParameteri(m_type, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+    glTextureParameteri(m_type, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glTexParameteri(m_type, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(m_type, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glTexImage2D(m_type, 0, GL_RGBA8, SIZE, SIZE, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+
+    glGenerateMipmap(m_type);
+
+    glBindTexture(m_type, 0);
+}
 
 //Destroy the texture
 Texture::~Texture() { destroy(); }

@@ -51,24 +51,6 @@ int main() {
             .Build()
     );
 
-    scene.AddObject( lumen::gl::RenderObjectBuilder::Create("PYRAMID")
-            .WithVertices({
-                {{-0.5f, 0.0f,  0.5f}, {0.0f, 0.0f}},
-                {{-0.5f, 0.0f, -0.5f}, {5.0f, 0.0f}},
-                {{ 0.5f, 0.0f, -0.5f}, {5.0f, 5.0f}},
-                {{ 0.5f, 0.0f,  0.5f}, {0.0f, 5.0f}},
-                {{ 0.0f, 0.8f,  0.0f}, {2.5f, 5.0f}},
-                })
-            .WithIndices({
-                0,1,2,  0,2,3,     
-                0,1,4,  1,2,4,
-                2,3,4,  3,0,4     
-                })
-            .WithProgram(scene.GetOrLoadProgram("...", "...", "DEFAULT_PROGRAM"))
-            .WithTexture(scene.GetOrLoadTexture("../assets/textures/white-granite.png"))
-            .Build()
-    );
-
     renderer.SetActiveScene(&scene);
 
 

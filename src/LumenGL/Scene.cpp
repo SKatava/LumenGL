@@ -4,7 +4,7 @@
 
 namespace lumen::gl {
 
-    //Scene constructor - sets default camera and shader programs
+    //Scene constructor - sets default camera and shader program
     Scene::Scene(const std::string& name) : m_name(name) {
         m_camera = std::make_shared<Camera>(800, 800, glm::vec3(0.0f, 0.0f, 2.0f));
         GetOrLoadProgram("../shaders/default.vert", "../shaders/default.frag", "DEFAULT_PROGRAM");
@@ -51,7 +51,7 @@ namespace lumen::gl {
         }
     }
 
-    //Loads the shader to the cache and returns it
+    //Loads the shader to the cache(if it doesn't exist) and returns it
     std::shared_ptr<ShaderProgram> Scene::GetOrLoadProgram(const std::string& vertPath, const std::string& fragPath, const std::string& name) {
         auto it = m_programCache.find(name);
 
@@ -65,6 +65,7 @@ namespace lumen::gl {
         return m_programCache[name];
     }
 
+    //Loads the texture to the cache(if it doesn't exist) and returns it
     std::shared_ptr<Texture> Scene::GetOrLoadTexture(const std::string& texturePath) {
         auto it = m_textureCache.find(texturePath);
 

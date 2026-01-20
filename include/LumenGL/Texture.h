@@ -37,7 +37,7 @@ class Texture {
         void destroy();
 
         GLuint m_ID;
-        GLenum m_type;
+        GLenum m_type = GL_TEXTURE_2D;
 };
 
 #endif

@@ -50,8 +50,8 @@ class Material {
 
     private:
         std::shared_ptr<ShaderProgram> m_program {nullptr};
-        std::shared_ptr<Texture> m_texture {nullptr};
-        glm::vec3 m_color;
+        std::shared_ptr<Texture> m_texture = std::make_shared<Texture>();
+        glm::vec3 m_color {1.f, 1.f, 1.f};
 };
 
 #endif
