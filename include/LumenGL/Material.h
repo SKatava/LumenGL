@@ -27,9 +27,6 @@ class Material {
 
         ~Material() = default;
 
-        static std::unique_ptr<Material> CreateBasic(const glm::vec3& color = {1.0f, 1.0f, 1.0f});
-        static std::unique_ptr<Material> CreateTextured(std::shared_ptr<Texture> texture, const glm::vec3& tint = {1.0f, 1.0f, 1.0f});
-
         //Getters and setters----------------------------
 
         void SetProgram(std::shared_ptr<ShaderProgram> program);

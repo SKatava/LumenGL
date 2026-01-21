@@ -28,6 +28,7 @@ namespace lumen::gl {
             ~Scene();
 
             //Getters and setters----------------------------
+            [[nodiscard]] std::vector<std::shared_ptr<RenderObject>> GetRenderObjects() const noexcept;
 
             //Core interface---------------------------------
 
@@ -44,6 +45,10 @@ namespace lumen::gl {
             std::shared_ptr<Camera> m_camera;
             std::map<std::string, std::shared_ptr<ShaderProgram>> m_programCache;
             std::map<std::string, std::shared_ptr<Texture>> m_textureCache;
+            std::vector<const RenderObject*> m_sorted;
+            bool m_shouldSort {};
+
+            void SortObjects();
     };
 
 }

@@ -3,13 +3,16 @@
 //Contructor - create a default texture
 Texture::Texture() {
     const int SIZE = 8;
+    const int CHECK_SIZE = 4;
     glm::uint32 pixels[SIZE*SIZE];
     glm::uint32 colorA = 0xFFFFFFFF;
     glm::uint32 colorB = 0xFF404040;
 
     for(int y{}; y < SIZE; ++y) {
         for(int x{}; x < SIZE; ++x) {
-            bool even = ( (x + y) % 2 ) == 0;
+            int cx = x / CHECK_SIZE;
+            int cy = y / CHECK_SIZE;
+            bool even = (cx + cy) % 2 == 0;
             pixels[y * SIZE + x] = even ? colorA : colorB;
         }
     }

@@ -6,7 +6,7 @@ namespace lumen::gl {
 
     //Scene constructor - sets default camera and shader program
     Scene::Scene(const std::string& name) : m_name(name) {
-        m_camera = std::make_shared<Camera>(800, 800, glm::vec3(0.0f, 0.0f, 2.0f));
+        m_camera = std::make_shared<Camera>(800, 800, glm::vec3(0.0f, 0.0f, 5.0f));
         GetOrLoadProgram("../shaders/default.vert", "../shaders/default.frag", "DEFAULT_PROGRAM");
         GetOrLoadTexture("../assets/textures/white-granite.png");
     }
@@ -14,42 +14,38 @@ namespace lumen::gl {
     //Scene destructor
     Scene::~Scene() {}
 
+    std::vector<std::shared_ptr<RenderObject>> Scene::GetRenderObjects() const noexcept {
+        return m_objects;
+    }
+
     //Add the object the scene
     void Scene::AddObject(std::shared_ptr<RenderObject> object) {
         m_objects.push_back(object); 
+        m_shouldSort = true;
     }
 
-    //Render all objects in the scene - sorted by shader program
+    //Render all objects in the scene
+    //TODO - do instancing for massive amount of objects/draw calls
     void Scene::RenderScene() {
-        //Testing transforms
-        m_objects.back()->transform.Rotate(0.5, {0.f, 1.f, 0.f});
-        m_objects.back()->transform.Scale(0.999f);
-
-        std::vector<const RenderObject*> sorted;
-        sorted.reserve(m_objects.size());
-
-        for (const auto& obj : m_objects) {
-            sorted.push_back(obj.get());
-        }
-
-        std::ranges::sort(sorted, {}, [](const RenderObject* obj) {return obj->material->GetProgram(); } );
+        if(m_shouldSort) SortObjects();
 
         Material* currentMaterial = nullptr;
-
-        for (const auto* obj : sorted) {
+        
+        for (const auto* obj : m_sorted) {
             if (!currentMaterial || obj->material->GetProgram().get() != currentMaterial->GetProgram().get()) {
                 currentMaterial = obj->material.get();
-                currentMaterial->Bind();
+                currentMaterial->GetProgram()->Activate();
                 m_camera->Matrix(45.0f, 0.1f, 100.0f, currentMaterial->GetProgram(), "camMatrix");
             }
-
+            
+            obj->material->GetTexture()->Bind();
             obj->material->SetUniforms();
             obj->mesh->Bind();
             obj->transform.Apply(currentMaterial->GetProgram(), "modelMatrix");
 
             glDrawElements(obj->drawMode, obj->mesh->GetIndicesCount(), GL_UNSIGNED_INT, 0);
         }
-    }
+    }    
 
     //Loads the shader to the cache(if it doesn't exist) and returns it
     std::shared_ptr<ShaderProgram> Scene::GetOrLoadProgram(const std::string& vertPath, const std::string& fragPath, const std::string& name) {
@@ -77,4 +73,20 @@ namespace lumen::gl {
         return m_textureCache[texturePath];
     }
 
+    //Sort all the objects int the scene by shader program
+    //TODO - make better sorting system since this one doesnt account for same shader and different textures
+    void Scene::SortObjects() {
+        m_sorted.clear();
+        m_sorted.reserve(m_objects.size());
+
+        for (const auto& obj : m_objects) {
+            m_sorted.push_back(obj.get());
+        }
+
+        std::ranges::sort(m_sorted, {}, [](const RenderObject* obj) {return obj->material->GetProgram(); } );
+
+        m_shouldSort = false;
+    }
 }
+
+
