@@ -55,6 +55,8 @@ int main() {
                 );
         scene.GetRenderObjects().back()->transform.Translate({1.f, 1.f, 0.f});
     }
+    
+    scene.GetRenderObjects().back()->transform.Scale(1.25f);
 
     scene.AddObject( lumen::gl::RenderObjectBuilder::Create("PYRAMID")
             .WithVertices({
@@ -70,11 +72,12 @@ int main() {
                 2,3,4,  3,0,4     
                 })
             .WithProgram(scene.GetOrLoadProgram("...", "...", "DEFAULT_PROGRAM"))
-            .WithTexture(scene.GetOrLoadTexture("../assets/textures/white-granite.png"))
+            //.WithTexture(scene.GetOrLoadTexture("../assets/textures/white-granite.png"))
             .Build()
             );
 
     scene.GetRenderObjects().back()->transform.Translate({1.f, -1.f, 0.f});
+    scene.GetRenderObjects().back()->transform.Scale(0.75f);
 
     scene.AddObject( lumen::gl::RenderObjectBuilder::Create("PYRAMID")
             .WithVertices({
@@ -115,6 +118,7 @@ int main() {
             );
 
     scene.GetRenderObjects().back()->transform.Translate({-1.f, 1.f, 0.f});
+    scene.GetRenderObjects().back()->transform.Scale(1.5f);
 
     renderer.SetActiveScene(&scene);
     

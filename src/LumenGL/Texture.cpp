@@ -1,40 +1,7 @@
 #include <LumenGL/Texture.h>
 
 //Contructor - create a default texture
-Texture::Texture() {
-    const int SIZE = 8;
-    const int CHECK_SIZE = 4;
-    glm::uint32 pixels[SIZE*SIZE];
-    glm::uint32 colorA = 0xFFFFFFFF;
-    glm::uint32 colorB = 0xFF404040;
-
-    for(int y{}; y < SIZE; ++y) {
-        for(int x{}; x < SIZE; ++x) {
-            int cx = x / CHECK_SIZE;
-            int cy = y / CHECK_SIZE;
-            bool even = (cx + cy) % 2 == 0;
-            pixels[y * SIZE + x] = even ? colorA : colorB;
-        }
-    }
-
-    glGenTextures(1, &m_ID);
-
-    glActiveTexture(GL_TEXTURE0);
-
-    glBindTexture(m_type, m_ID);
-
-    glTextureParameteri(m_type, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-    glTextureParameteri(m_type, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-    glTexParameteri(m_type, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(m_type, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-    glTexImage2D(m_type, 0, GL_RGBA8, SIZE, SIZE, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-
-    glGenerateMipmap(m_type);
-
-    glBindTexture(m_type, 0);
-}
+Texture::Texture() { createDefault(); }
 
 //Destroy the texture
 Texture::~Texture() { destroy(); }
@@ -58,8 +25,8 @@ Texture::Texture(const char* image, GLenum texture_type, GLenum slot, GLenum for
     glTextureParameteri(m_type, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
     glTextureParameteri(m_type, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    glTexParameteri(m_type, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(m_type, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTextureParameteri(m_type, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTextureParameteri(m_type, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
     glTexImage2D(m_type, 0, GL_RGB, width, height, 0, format, pixel_type, bytes);
 
@@ -88,6 +55,40 @@ void Texture::Unbind() const {
 }
 
 //Delete the texture
-void Texture::destroy() {
+void Texture::destroy() const {
     glDeleteTextures(1, &m_ID);
+}
+
+//Create a default texture
+void Texture::createDefault() {
+    const int SIZE = 16;
+    const int CHECK_SIZE = 8;
+
+    glm::uint32 pixels[SIZE*SIZE];
+    glm::uint32 colorA = 0xFFFFFFFF;
+    glm::uint32 colorB = 0xFF404040;
+
+    for(int y{}; y < SIZE; ++y) {
+        for(int x{}; x < SIZE; ++x) {
+            int cx = x / CHECK_SIZE;
+            int cy = y / CHECK_SIZE;
+            bool even = (cx + cy) % 2 == 0;
+            pixels[y * SIZE + x] = even ? colorA : colorB;
+        }
+    }
+
+    glGenTextures(1, &m_ID);
+
+    glActiveTexture(GL_TEXTURE0);
+
+    glBindTexture(m_type, m_ID);
+
+    glTextureParameteri(m_ID, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTextureParameteri(m_ID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTextureParameteri(m_ID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTextureParameteri(m_ID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glTexImage2D(m_type, 0, GL_RGBA8, SIZE, SIZE, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+
+    glBindTexture(m_type, 0);
 }

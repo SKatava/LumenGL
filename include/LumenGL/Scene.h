@@ -28,6 +28,7 @@ namespace lumen::gl {
             ~Scene();
 
             //Getters and setters----------------------------
+            
             [[nodiscard]] std::vector<std::shared_ptr<RenderObject>> GetRenderObjects() const noexcept;
 
             //Core interface---------------------------------

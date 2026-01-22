@@ -34,7 +34,8 @@ class Texture {
         void Unbind() const;
 
     private:
-        void destroy();
+        void destroy() const;
+        void createDefault(); 
 
         GLuint m_ID;
         GLenum m_type = GL_TEXTURE_2D;

@@ -25,7 +25,7 @@ namespace lumen::gl {
     }
 
     //Render all objects in the scene
-    //TODO - do instancing for massive amount of objects/draw calls
+    //TODO - do instancing for massive amount of objects/draw calls - need to handle 1m+ objects with same material diff positions at at least 60fps
     void Scene::RenderScene() {
         if(m_shouldSort) SortObjects();
 
