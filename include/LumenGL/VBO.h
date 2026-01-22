@@ -9,7 +9,7 @@
 
 struct Vertex {
     glm::vec3 position;     // float x 3 = 4 x 3 = 12 bytes
-    //glm::vec3 normal;       // float x 3 = 4 x 3 = 12 bytes
+    glm::vec3 normal;       // float x 3 = 4 x 3 = 12 bytes
     glm::vec2 texturePos;   // float x 2 = 4 x 2 = 8 bytes
                             // total: 32 bytes or 256 bits
 };

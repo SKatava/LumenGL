@@ -33,59 +33,15 @@ int main() {
     renderer.Init();
 
     lumen::gl::Scene scene("TEST_SCENE");
-   
-    //Testing perfomance
-    for(int i {}; i < 1; ++i) {
-        scene.AddObject( lumen::gl::RenderObjectBuilder::Create("PYRAMID")
-                .WithVertices({
-                    {{-0.5f, 0.0f,  0.5f}, {0.0f, 0.0f}},
-                    {{-0.5f, 0.0f, -0.5f}, {5.0f, 0.0f}},
-                    {{ 0.5f, 0.0f, -0.5f}, {5.0f, 5.0f}},
-                    {{ 0.5f, 0.0f,  0.5f}, {0.0f, 5.0f}},
-                    {{ 0.0f, 0.8f,  0.0f}, {2.5f, 5.0f}},
-                    })
-                .WithIndices({
-                    0,1,2,  0,2,3,     
-                    0,1,4,  1,2,4,
-                    2,3,4,  3,0,4     
-                    })
-                .WithProgram(scene.GetOrLoadProgram("...", "...", "DEFAULT_PROGRAM"))
-                .WithTexture(scene.GetOrLoadTexture("../assets/textures/white-granite.png"))
-                .Build()
-                );
-        scene.GetRenderObjects().back()->transform.Translate({1.f, 1.f, 0.f});
-    }
-    
-    scene.GetRenderObjects().back()->transform.Scale(1.25f);
 
     scene.AddObject( lumen::gl::RenderObjectBuilder::Create("PYRAMID")
             .WithVertices({
-                {{-0.5f, 0.0f,  0.5f}, {0.0f, 0.0f}},
-                {{-0.5f, 0.0f, -0.5f}, {5.0f, 0.0f}},
-                {{ 0.5f, 0.0f, -0.5f}, {5.0f, 5.0f}},
-                {{ 0.5f, 0.0f,  0.5f}, {0.0f, 5.0f}},
-                {{ 0.0f, 0.8f,  0.0f}, {2.5f, 5.0f}},
-                })
-            .WithIndices({
-                0,1,2,  0,2,3,     
-                0,1,4,  1,2,4,
-                2,3,4,  3,0,4     
-                })
-            .WithProgram(scene.GetOrLoadProgram("...", "...", "DEFAULT_PROGRAM"))
-            //.WithTexture(scene.GetOrLoadTexture("../assets/textures/white-granite.png"))
-            .Build()
-            );
-
-    scene.GetRenderObjects().back()->transform.Translate({1.f, -1.f, 0.f});
-    scene.GetRenderObjects().back()->transform.Scale(0.75f);
-
-    scene.AddObject( lumen::gl::RenderObjectBuilder::Create("PYRAMID")
-            .WithVertices({
-                {{-0.5f, 0.0f,  0.5f}, {0.0f, 0.0f}},
-                {{-0.5f, 0.0f, -0.5f}, {5.0f, 0.0f}},
-                {{ 0.5f, 0.0f, -0.5f}, {5.0f, 5.0f}},
-                {{ 0.5f, 0.0f,  0.5f}, {0.0f, 5.0f}},
-                {{ 0.0f, 0.8f,  0.0f}, {2.5f, 5.0f}},
+                //Position(local)       Normal          Texture coords
+                {{-0.5f, 0.0f,  0.5f}, {0.f, 0.f, 0.f}, {0.0f, 0.0f}},
+                {{-0.5f, 0.0f, -0.5f}, {0.f, 0.f, 0.f}, {5.0f, 0.0f}},
+                {{ 0.5f, 0.0f, -0.5f}, {0.f, 0.f, 0.f}, {0.0f, 0.0f}},
+                {{ 0.5f, 0.0f,  0.5f}, {0.f, 0.f, 0.f}, {5.0f, 0.0f}},
+                {{ 0.0f, 0.8f,  0.0f}, {0.f, 0.f, 0.f}, {2.5f, 5.0f}},
                 })
             .WithIndices({
                 0,1,2,  0,2,3,     
@@ -96,29 +52,6 @@ int main() {
             .WithTexture(scene.GetOrLoadTexture("../assets/textures/white-granite.png"))
             .Build()
             );
-
-    scene.GetRenderObjects().back()->transform.Translate({-1.f, -1.f, 0.f});
-
-    scene.AddObject( lumen::gl::RenderObjectBuilder::Create("PYRAMID")
-            .WithVertices({
-                {{-0.5f, 0.0f,  0.5f}, {0.0f, 0.0f}},
-                {{-0.5f, 0.0f, -0.5f}, {5.0f, 0.0f}},
-                {{ 0.5f, 0.0f, -0.5f}, {5.0f, 5.0f}},
-                {{ 0.5f, 0.0f,  0.5f}, {0.0f, 5.0f}},
-                {{ 0.0f, 0.8f,  0.0f}, {2.5f, 5.0f}},
-                })
-            .WithIndices({
-                0,1,2,  0,2,3,     
-                0,1,4,  1,2,4,
-                2,3,4,  3,0,4     
-                })
-            .WithProgram(scene.GetOrLoadProgram("...", "...", "DEFAULT_PROGRAM"))
-            //.WithTexture(scene.GetOrLoadTexture("../assets/textures/white-granite.png"))
-            .Build()
-            );
-
-    scene.GetRenderObjects().back()->transform.Translate({-1.f, 1.f, 0.f});
-    scene.GetRenderObjects().back()->transform.Scale(1.5f);
 
     renderer.SetActiveScene(&scene);
     

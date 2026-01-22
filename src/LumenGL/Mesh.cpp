@@ -6,8 +6,9 @@ Mesh::Mesh() {
     m_EBO.Bind();
     m_VBO.Bind();
 
-    m_VAO.LinkVBO(m_VBO, 0, 3, GL_FLOAT, 5, 0);
-    m_VAO.LinkVBO(m_VBO, 1, 2, GL_FLOAT, 5, 3);
+    m_VAO.LinkVBO(m_VBO, 0, 3, GL_FLOAT, 8, 0);
+    m_VAO.LinkVBO(m_VBO, 1, 3, GL_FLOAT, 8, 3);
+    m_VAO.LinkVBO(m_VBO, 1, 2, GL_FLOAT, 8, 6);
 
     m_VAO.Unbind();
     m_EBO.Unbind();
