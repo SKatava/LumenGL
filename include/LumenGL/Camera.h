@@ -19,8 +19,8 @@ class Camera {
     public:
         Camera();
         Camera(int width, int heigth, glm::vec3 position);
-        void Update_matrix();
-        void Matrix(float FOVdeg, float nearPlane, float farPlane, std::shared_ptr<ShaderProgram> program, const char* uniform);
+        void UploadMatrix(std::shared_ptr<ShaderProgram> program, const char* uniform) const;
+        void UpdateMatrix(float FOVdeg, float nearPlane, float farPlane);
 
     private:
         glm::vec3 m_position;

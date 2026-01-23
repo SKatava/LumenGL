@@ -38,10 +38,10 @@ int main() {
             .WithVertices({
                 //Position(local)       Normal          Texture coords
                 {{-0.5f, 0.0f,  0.5f}, {0.f, 0.f, 0.f}, {0.0f, 0.0f}},
-                {{-0.5f, 0.0f, -0.5f}, {0.f, 0.f, 0.f}, {5.0f, 0.0f}},
+                {{-0.5f, 0.0f, -0.5f}, {0.f, 0.f, 0.f}, {1.0f, 0.0f}},
                 {{ 0.5f, 0.0f, -0.5f}, {0.f, 0.f, 0.f}, {0.0f, 0.0f}},
-                {{ 0.5f, 0.0f,  0.5f}, {0.f, 0.f, 0.f}, {5.0f, 0.0f}},
-                {{ 0.0f, 0.8f,  0.0f}, {0.f, 0.f, 0.f}, {2.5f, 5.0f}},
+                {{ 0.5f, 0.0f,  0.5f}, {0.f, 0.f, 0.f}, {1.0f, 0.0f}},
+                {{ 0.0f, 0.8f,  0.0f}, {0.f, 0.f, 0.f}, {1.f, 1.0f}},
                 })
             .WithIndices({
                 0,1,2,  0,2,3,     
@@ -50,6 +50,7 @@ int main() {
                 })
             .WithProgram(scene.GetOrLoadProgram("...", "...", "DEFAULT_PROGRAM"))
             .WithTexture(scene.GetOrLoadTexture("../assets/textures/white-granite.png"))
+            .WithColor({1.f, 1.f, 1.f})
             .Build()
             );
 
@@ -64,7 +65,7 @@ int main() {
         glfwPollEvents();
         renderer.BeginFrame();
         renderer.Render();
-        //renderer.EndFrame();main
+        //renderer.EndFrame();
     }
 
     glfwTerminate();

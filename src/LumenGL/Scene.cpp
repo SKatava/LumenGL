@@ -8,7 +8,6 @@ namespace lumen::gl {
     Scene::Scene(const std::string& name) : m_name(name) {
         m_camera = std::make_shared<Camera>(800, 800, glm::vec3(0.0f, 0.0f, 5.0f));
         GetOrLoadProgram("../shaders/default.vert", "../shaders/default.frag", "DEFAULT_PROGRAM");
-        GetOrLoadTexture("../assets/textures/white-granite.png");
     }
 
     //Scene destructor
@@ -30,12 +29,14 @@ namespace lumen::gl {
         if(m_shouldSort) SortObjects();
 
         Material* currentMaterial = nullptr;
-        
+       
+        m_camera->UpdateMatrix(45.f, 0.1f, 100.f); // this is done every frame, but realisticly only needs to be done when camera is modified
+
         for (const auto* obj : m_sorted) {
             if (!currentMaterial || obj->material->GetProgram().get() != currentMaterial->GetProgram().get()) {
                 currentMaterial = obj->material.get();
                 currentMaterial->GetProgram()->Activate();
-                m_camera->Matrix(45.0f, 0.1f, 100.0f, currentMaterial->GetProgram(), "camMatrix");
+                m_camera->UploadMatrix(currentMaterial->GetProgram(), "camMatrix");
             }
             
             obj->material->GetTexture()->Bind();

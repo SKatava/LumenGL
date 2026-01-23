@@ -11,13 +11,20 @@ Camera::Camera(int width, int height, glm::vec3 position) {
 }   
 
 //Calculating and passing the matrix to the deisred shader
-void Camera::Matrix(float FOVdeg, float nearPlane, float farPlane, std::shared_ptr<ShaderProgram> program, const char* uniform) {
+void Camera::UpdateMatrix(float FOVdeg, float nearPlane, float farPlane) {
     glm::mat4 view = glm::mat4(1.0f);
 	glm::mat4 projection = glm::mat4(1.0f);
 
 	view = glm::lookAt(m_position, m_position + m_orientation, m_up);
 	projection = glm::perspective(glm::radians(FOVdeg), (float)m_width / m_height, nearPlane, farPlane);
 
-    program->SetMat4(uniform, projection * view);
+    m_matrix = projection * view;
+
 }
+
+void Camera::UploadMatrix(std::shared_ptr<ShaderProgram> program, const char* uniform) const {
+    program->SetMat4(uniform, m_matrix);
+}
+
+
 
