@@ -1,5 +1,6 @@
 #include <LumenGL/Shader.h>
-#include <iostream>
+
+#include <LumenGL/Logger.h>
 
 Shader::Shader() {}
 
@@ -7,20 +8,8 @@ Shader::Shader() {}
 Shader::Shader(const std::string& shaderFile, ShaderType type) {
     std::string content{};
     m_type = type;
-   
-    //Inform message for shader creation
-    std::string msg = "SHADER: Trying to create shader from file: ";
-    msg.append(shaderFile);
-    Logger::Log(msg);
 
-    //Try to get content of shader file
-    try {
-        content = GetFileContent(shaderFile);
-    }
-    catch(std::string msg) {
-        Logger::Log(msg); 
-        throw("SHADER: Unable to create a shader");
-    }
+    content = GetFileContent(shaderFile);
 
 
     //Create shader based on type
@@ -39,16 +28,8 @@ Shader::Shader(const std::string& shaderFile, ShaderType type) {
     glShaderSource(m_ID, 1, &source, NULL);
     glCompileShader(m_ID);
 
-    //Check for errors
-    try {
-        CompileErrors();
-    }
-    catch (std::string msg) {
-        Logger::Log(msg); 
-        throw ("SHADER: Unable to create a shader");
-    }
-
-    Logger::Log("SHADER: Shader created successfuly");
+    CompileErrors();
+    
 }
 
 //Get content of shader file
@@ -65,7 +46,8 @@ std::string Shader::GetFileContent(const std::string& file) {
         return(contents);
     }
 
-    throw("SHADER: Can't opent the shader file");
+    LOG_ERROR("Failed to open the file: {}", file);
+    return "";
 }
 
 //Check for errors in shader
@@ -76,11 +58,9 @@ void Shader::CompileErrors() {
     if (hasCompiled == GL_FALSE)
     {
         glGetShaderInfoLog(m_ID, 1024, NULL, infoLog);
-        std::string msg = "SHADER: Compiling failed, info: ";
-        msg.append(infoLog);
-        std::cout << msg << "\n";
-        throw(msg);
+        LOG_ERROR("Failed to compile the shader file: {}", infoLog); 
     }
+
 }
 
 void Shader::Delete() {

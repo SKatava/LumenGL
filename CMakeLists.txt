@@ -5,9 +5,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(NAME LumenGL)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
 
 #Glad from source
 add_library(glad STATIC external/glad/src/glad.c)
@@ -24,7 +25,6 @@ add_library(${NAME} STATIC
     src/LumenGL/EBO.cpp
     src/LumenGL/ShaderProgram.cpp
     src/LumenGL/Shader.cpp
-    src/LumenGL/Logger.cpp
     src/LumenGL/Renderer.cpp
     src/LumenGL/Mesh.cpp
     src/LumenGL/Material.cpp
@@ -33,6 +33,7 @@ add_library(${NAME} STATIC
     src/LumenGL/Transform.cpp
     src/LumenGL/Scene.cpp
     src/LumenGL/RenderObjectBuilder.cpp
+    src/LumenGL/Logger.cpp
 )
 
 target_include_directories(${NAME}

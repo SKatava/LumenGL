@@ -1,4 +1,6 @@
 #include <LumenGL/Renderer.h>
+#include <LumenGL/Logger.h>
+
 
 namespace lumen::gl {
 

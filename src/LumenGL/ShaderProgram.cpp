@@ -1,22 +1,18 @@
 #include <LumenGL/ShaderProgram.h>
 
+#include <LumenGL/Logger.h>
+
 //Default constructor
 ShaderProgram::ShaderProgram() {}
 
 //Construct an actual shader program with given files and shader types, the file and type should share same index in vector
 ShaderProgram::ShaderProgram(const std::vector<std::string>& files, const std::vector<ShaderType>& types) {
     m_ID = glCreateProgram();
-    
+
     for(size_t i{}; i < files.size(); ++i) {
         Shader shader;
 
-        try {
-            shader = Shader(files[i], types[i]); 
-        }
-        catch(std::string msg) {
-            Logger::Log(msg); 
-            throw("SHADER_PROGRAM: Can't create the shader program");
-        }
+        shader = Shader(files[i], types[i]); 
 
 
         glAttachShader(m_ID, shader.ShaderID());
@@ -24,7 +20,6 @@ ShaderProgram::ShaderProgram(const std::vector<std::string>& files, const std::v
     }
 
     glLinkProgram(m_ID);
-    Logger::Log("SHADER_PROGRAM: Shader program created successfuly");
 }
 
 //Get the shader program(ID)
@@ -65,9 +60,7 @@ void ShaderProgram::CompileErrors() const {
     if (hasCompiled == GL_FALSE)
     {
         glGetProgramInfoLog(m_ID, 1024, NULL, infoLog);
-        std::string msg = "SHADER_PROGRAM: Compiling failed, info: ";
-        msg.append(infoLog);
-        throw(msg);
+        LOG_ERROR("Failed to compile the shader program: {}", infoLog);
     }
 }
 
