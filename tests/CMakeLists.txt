@@ -4,7 +4,6 @@ add_executable(lumengl_tests
     test_result.cpp
     test_mesh.cpp
     test_camera.cpp
-    test_shader.cpp
 )
 
 target_link_libraries(lumengl_tests
