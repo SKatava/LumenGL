@@ -17,11 +17,11 @@ Fetched automatically via CMake FetchContent:
 - GLAD (OpenGL 4.6 core, pre-generated)
 
 ## Build
-\`\`\`bash
+```bash
 mkdir build && cd build
 cmake .. -DBUILD_EXAMPLES=ON
 cmake --build . -j$(nproc)
-\`\`\`
+```
 
 ## Examples
 | Example | Demonstrates |
