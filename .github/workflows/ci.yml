@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build (${{ matrix.build_type }})
+    name: Build & Test (${{ matrix.build_type }})
     runs-on: ubuntu-latest
 
     strategy:
@@ -50,6 +50,7 @@ jobs:
             -G Ninja \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
             -DBUILD_EXAMPLES=ON \
+            -DBUILD_TESTS=ON \
             -DGLFW_BUILD_WAYLAND=OFF \
             -DGLFW_BUILD_X11=ON
 
@@ -62,9 +63,15 @@ jobs:
           test -f build/examples/02_cube
           test -f build/examples/03_sphere
 
-      - name: Smoke test
+      - name: Run tests
         run: |
           export DISPLAY=:99
           Xvfb :99 -screen 0 1280x720x24 &
           sleep 1
+          cd build && ctest --output-on-failure --timeout 30
+
+      - name: Smoke test
+        if: matrix.build_type == 'Release'
+        run: |
+          export DISPLAY=:99
           timeout 2 build/examples/01_triangle || true

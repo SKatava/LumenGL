@@ -33,7 +33,7 @@ void Mesh::updateVertices(std::span<const Vertex> vertices) {
     m_vbo.update(vertices);
 }
 
-Mesh Mesh::quad() {
+MeshData quadData() {
     const std::vector<Vertex> verts = {
         // position             normal      uv
         {{ -0.5f, -0.5f, 0.f }, { 0,0,1 }, { 0.f, 0.f }},
@@ -42,7 +42,7 @@ Mesh Mesh::quad() {
         {{ -0.5f,  0.5f, 0.f }, { 0,0,1 }, { 0.f, 1.f }},
     };
     const std::vector<uint32_t> idx = { 0,1,2, 2,3,0 };
-    return Mesh(verts, idx);
+    return MeshData {std::move(verts), std::move(idx)};
 }
 
 Mesh Mesh::cube() {
@@ -125,7 +125,7 @@ static uint32_t midpoint(
     return idx;
 }
 
-Mesh Mesh::icosphere(int subdivisions) {
+MeshData icosphereData(int subdivisions) {
     const float t = (1.f + std::sqrt(5.f)) / 2.f;
 
     std::vector<glm::vec3> positions;
@@ -244,7 +244,7 @@ Mesh Mesh::icosphere(int subdivisions) {
         finalIdx.insert(finalIdx.end(), { base, base+1, base+2 });
     }
 
-    return Mesh(verts, finalIdx);
+    return MeshData{ std::move(verts), std::move(finalIdx)};
 }
 
 // ─────────────────────────────────────────────
@@ -288,6 +288,16 @@ Mesh Mesh::uvsphere(int stacks, int slices) {
     }
 
     return Mesh(verts, idx);
+}
+
+Mesh Mesh::quad() {
+    auto d = quadData();
+    return Mesh(d.vertices, d.indices);
+}
+
+Mesh Mesh::icosphere(int subdivisions) {
+    auto d = icosphereData(subdivisions);
+    return Mesh(d.vertices, d.indices);
 }
 
 } 

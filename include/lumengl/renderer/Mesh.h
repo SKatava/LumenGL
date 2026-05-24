@@ -9,7 +9,6 @@
 
 namespace lgl {
 
-// Explicit, tightly packed. No hidden padding.
 struct Vertex {
     glm::vec3 position;  // offset  0, size 12
     glm::vec3 normal;    // offset 12, size 12
@@ -21,6 +20,14 @@ static_assert(sizeof(Vertex) == 32, "Vertex layout changed — update attrib poi
 static_assert(offsetof(Vertex, position) == 0);
 static_assert(offsetof(Vertex, normal)   == 12);
 static_assert(offsetof(Vertex, uv)       == 24);
+
+struct MeshData {
+    std::vector<Vertex>   vertices;
+    std::vector<uint32_t> indices;
+};
+
+MeshData icosphereData(int subdivisions);
+MeshData quadData();
 
 class Mesh {
 public:

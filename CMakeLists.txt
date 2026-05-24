@@ -40,3 +40,9 @@ target_compile_options(lumengl PRIVATE
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
+
+option(BUILD_TESTS "Build tests" ON)
+if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
