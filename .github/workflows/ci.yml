@@ -1,30 +1,64 @@
-name: C++ OpenGL Build
+name: CI
 
 on:
   push:
+    branches: [main, feature-*]
   pull_request:
+    branches: [main]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    name: Build & Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        build_type: [Debug, Release]
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Install dependencies
-      run: |
-        sudo apt update
-        sudo apt install -y \
-          cmake \
-          g++ \
-          libgl1-mesa-dev \
-          libglfw3-dev \
-          libglm-dev
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            cmake \
+            g++ \
+            ninja-build \
+            libgl1-mesa-dev \
+            libgl1-mesa-dri \
+            libgles2-mesa-dev \
+            xvfb
 
-    - name: Configure
-      run: cmake -S . -B build
+      - name: Cache FetchContent dependencies
+        uses: actions/cache@v4
+        with:
+          path: build/_deps
+          key: deps-${{ runner.os }}-${{ hashFiles('external/CMakeLists.txt') }}
+          restore-keys: deps-${{ runner.os }}-
 
-    - name: Build
-      run: cmake --build build
+      - name: Configure
+        run: |
+          cmake -S . -B build \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+            -DBUILD_EXAMPLES=ON
 
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Verify examples were built
+        run: |
+          test -f build/examples/01_triangle
+          test -f build/examples/02_cube
+          test -f build/examples/03_sphere
+
+      - name: Smoke test examples
+        run: |
+          export DISPLAY=:99
+          Xvfb :99 -screen 0 1280x720x24 &
+          sleep 1
+          timeout 2 build/examples/01_triangle || true
